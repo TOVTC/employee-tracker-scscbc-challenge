@@ -1,25 +1,8 @@
-// server.js
-// routes -> apiRoutes
-// index.js
-// departmentRoutes.js
-// rolesRoutes.js
-// employeeRoutes.js
-
-// SERVER
-// post: add a department
-// post: add a role
-// post: add an employee
-// put: update an employee role
-
-// router file for each type of table to handle specific types of requests?
-// view all departments, view all roles, view all employees, add a department, add a role, add an employee, and update an employee role
-
-// maybe use constructor functions to create specific objects out of inquirer responses?
-
 // INQUIRER
 // stringify returned promises
 // each type of command triggers a different instance of inquirer?
 // object.data[...] - so for each item in the returned data array, join the values needed and push to inquirer options?
+// maybe use constructor functions to create specific objects out of inquirer responses?
 
 // BONUSES
 // update employee manager

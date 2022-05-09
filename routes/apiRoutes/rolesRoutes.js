@@ -17,4 +17,25 @@ router.get("/roles", (req, res) => {
     });
 });
 
+router.post("/role", ({body}, res) => {
+    // add validation here
+    // if (errors) {
+    //     res.status(400).json({error: errors});
+    //     return;
+    // }
+    const sql = `INSERT INTO roles (job_title, salary, dept_id)
+                    VALUES(?,?,?)`;
+    const params = [body.job_title, body.salary, body.dept_id];
+    db.query(sql, params, (err, result) => {
+        if (err) {
+            res.status(400).json({error: err.message});
+            return;
+        }
+        res.json({
+            message: "success",
+            data: body
+        });
+    });
+});
+
 module.exports = router;
