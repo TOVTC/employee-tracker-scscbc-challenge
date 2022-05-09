@@ -11,7 +11,7 @@ CREATE TABLE roles (
     id INT AUTO_INCREMENT PRIMARY KEY,
     job_title VARCHAR(30) NOT NULL,
     salary DECIMAL NOT NULL,
-    dept INT,
+    dept_id INT,
     CONSTRAINT fk_dept FOREIGN KEY (dept) REFERENCES departments(id) ON DELETE SET NULL
 );
 
@@ -24,8 +24,3 @@ CREATE TABLE employees (
     CONSTRAINT fk_role FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE SET NULL,
     CONSTRAINT fk_manager FOREIGN KEY (manager_id) REFERENCES employees(id) ON DELETE SET NULL
 );
-
-
--- // departments (name and id)
--- // roles table (job title, role id, foreign key to dept table, salary for role)
--- // employees table (id, first name, last name, foreign key to role id + department + salary, foreign key to another employee - self-referring key)

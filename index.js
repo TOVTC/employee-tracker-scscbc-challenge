@@ -1,48 +1,11 @@
-// SQL
-// test table joins
-
-// SELECT
-// 	employees.id,
-// 	concat(employees.last_name, ", ", employees.first_name) AS employee_name,
-// 	roles.job_title,
-// 	roles.salary,
-// 	departments.name AS department,
-// 	concat(managers.last_name, ", ", managers.first_name) AS manager_name
-// FROM
-// 	employees
-// LEFT JOIN
-// 	roles ON employees.role_id=roles.id
-// LEFT JOIN
-// 	departments ON roles.dept=departments.id
-// LEFT JOIN
-// 	employees managers ON employees.manager_id=managers.id;
-
-// SELECT
-// 	concat(employees.first_name, " ", employees.last_name) AS employee_name,
-// 	roles.job_title,
-// 	roles.salary,
-// 	departments.name AS department
-// FROM
-// 	employees
-// LEFT JOIN
-// 	roles ON employees.role_id=roles.id
-// LEFT JOIN
-// 	departments ON roles.dept=departments.id;
-
-// SELECT
-// 	concat(employees.first_name, " ", employees.last_name) AS employee_name,
-// 	concat(managers.first_name, " ", managers.last_name) AS manager_name,
-// FROM 
-// 	employees employees
-// LEFT JOIN
-// 	employees managers
-// ON
-// 	employees.manager_id=managers.id;
+// server.js
+// routes -> apiRoutes
+// index.js
+// departmentRoutes.js
+// rolesRoutes.js
+// employeeRoutes.js
 
 // SERVER
-// get: view departments
-// get: view roles
-// get: view employees
 // post: add a department
 // post: add a role
 // post: add an employee

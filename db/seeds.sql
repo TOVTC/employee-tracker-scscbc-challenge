@@ -9,7 +9,7 @@ VALUES
     ('Human_Resources'),
     ('Public_Relations');
 
-INSERT INTO roles (job_title, salary, dept)
+INSERT INTO roles (job_title, salary, dept_id)
 VALUES
     ('President', 70000, 1),
     ('Vice_President', 60000, 1),
