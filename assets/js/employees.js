@@ -16,7 +16,6 @@ function getEmployees() {
     db.query(sql, (err, rows) => {
         console.table(rows);
     });
-    process.exit();
 }
 
 // edit variables!
@@ -28,7 +27,6 @@ function addEmployee() {
     db.query(sql, params, (err, result) => {
         console.log(result);
     });
-    process.exit();
 }
 
 
@@ -41,7 +39,6 @@ function updateRole() {
     db.query(sql, params, (err, result) => {
         console.log(result);
     });
-    process.exit();
 }
 
 module.exports = {

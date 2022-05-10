@@ -4,11 +4,11 @@ const {getDepts} = require("./assets/js/departments");
 const {getRoles, addRole} = require("./assets/js/roles");
 const {getEmployees, addEmployee, updateRole} = require("./assets/js/employees");
 
-db.connect(err => {
-    if (err) throw err;
-    console.log("Database Connected");
-    start();
-});
+// db.connect(err => {
+//     if (err) throw err;
+//     console.log("Database Connected");
+//     start();
+// });
 
 let testArray = ["option 1", "option 2", "option 3"]
 
@@ -42,16 +42,45 @@ const mainMenu = [
     // }
 ]
 
+start();
 
 function start() {
     inquirer.prompt(mainMenu)
-        .then(res => {
-            getDepts();
+        .then(async (res) => {
+            switch(res.menu) {
+                case "View all departments":
+                    const sql = `SELECT * FROM departments`;
+                    await db.promise().query(sql)
+                    .then(([rows, fields]) => {
+                        console.log("\n");
+                        console.table(rows);
+                        start();
+                    })
+                    break;
+                case "View all roles":
+                    getRoles();
+                    start();
+                    break;
+                case "View all employees":
+                    getEmployees();
+                    start();
+                    break;
+                /*case "View employees by manager":
+                case "View employees by department":*/ 
+                case "Add department":
+                case "Add role":
+                case "Add employee":
+                case "Update employee role":
+                /*case "Update employee manager":
+                case "Delete department":
+                case "Delete role":
+                case "Delete employee":
+                case "View utilized budget by department":*/
+                case "Quit":
+                    process.exit();
+            }
         })
 }
-
-// RESPONSE HANDLING
-// one file for dept, role, emp of functions that make the actual API call to return data
 
 // INQUIRER
 // stringify returned promises vs constructor classes
@@ -69,7 +98,6 @@ function start() {
 
 // update employee role: get employees, get roles, put employee
 
-// how to get both inquirer and server running on application startup
 // validations and bonuses, change to asynchronous calls
 // MySQL2 exposes a .promise() function on Connections to upgrade an existing non-Promise connection to use Promises
 // post/push using constructor functions

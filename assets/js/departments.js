@@ -4,9 +4,10 @@ require("console.table");
 function getDepts() {
     const sql = `SELECT * FROM departments`;
     db.query(sql, (err, rows) => {
+        console.log("\n");
         console.table(rows);
+        return;
     });
-    process.exit();
 }
 
 //still to confirm
@@ -17,7 +18,6 @@ function addDept(name) {
     db.query(sql, [name], (err, result) => {
         console.log(result);
     });
-    process.exit();
 }
 
 module.exports = {

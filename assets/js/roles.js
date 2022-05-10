@@ -8,7 +8,6 @@ function getRoles() {
     db.query(sql, (err, rows) => {
         console.table(rows);
     });
-    process.exit();
 }
 
 // edit variables!
@@ -20,7 +19,6 @@ function addRole() {
     db.query(sql, params, (err, result) => {
         console.log(result);
     });
-    process.exit();
 }
 
 module.exports = {
