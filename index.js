@@ -1,8 +1,8 @@
 const inquirer = require("inquirer");
 const db = require("./db/connection");
-const {getDepts, addDept} = require("./assets/js/departments");
-const {getRoles, addRole} = require("./assets/js/roles");
-const {getEmployees, getManagers, addEmployee, updateRole} = require("./assets/js/employees");
+const {getDepts, viewBudget, addDept, deleteDept} = require("./assets/js/departments");
+const {getRoles, addRole, deleteRole} = require("./assets/js/roles");
+const {getEmployees, getManagers, getByManager, getByDept, addEmployee, updateRole, updateManager, deleteEmployee} = require("./assets/js/employees");
 
 class Option {
     constructor(name, value) {
@@ -11,10 +11,10 @@ class Option {
     }
 }
 
-const departments = [];
-const roles = [];
-const managers =[];
-const employees =[];
+const dArr = [];
+const rArr = [];
+const mArr =[];
+const eArr =[];
 
 const mainMenu = [
     {
@@ -24,19 +24,37 @@ const mainMenu = [
         choices: ["View all departments",
                     "View all roles", 
                     "View all employees",
-                    /*, "View employees by manager",
-                    "View employees by department,"*/ 
+                    "View employees by manager",
+                    "View employees by department",
                     "Add department", 
                     "Add role", 
                     "Add employee", 
                     "Update employee role", 
-                    /*"Update employee manager", 
+                    "Update employee manager", 
                     "Delete department",
                     "Delete role",
                     "Delete employee",
-                    "View utilized budget by department"*/
+                    "View utilized budget by department",
                     "Quit"],
         default: "Quit"
+    }
+]
+
+const byMan = [
+    {
+        type: "list",
+        name: "manager",
+        message: "Filter by which manager?",
+        choices: mArr
+    }
+]
+
+const byDept = [
+    {
+        type: "list",
+        name: "department",
+        message: "Filter by which department?",
+        choices: dArr
     }
 ]
 
@@ -63,7 +81,7 @@ const roleDet = [
         type: "list",
         name: "dept",
         message: "Within which department is this role?",
-        choices: departments
+        choices: dArr
     },
     {
         type: "confirm",
@@ -88,13 +106,13 @@ const employeeDet = [
         type: "list",
         name: "role",
         message: "What position does this employee hold?",
-        choices: roles
+        choices: rArr
     },
     {
         type: "list",
         name: "manager",
         message: "Under which manager does this employee work?",
-        choices: managers
+        choices: mArr
     }
 ]
 
@@ -103,48 +121,106 @@ const updRole = [
         type: "list",
         name: "employee",
         message: "Which employee record would you like to update?",
-        choices: employees
+        choices: eArr
     },
     {
         type: "list",
         name: "newRole",
         message: "What position does this employee hold?",
-        choices: roles
+        choices: rArr
+    }
+]
+
+const updMan = [
+    {
+        type: "list",
+        name: "employee",
+        message: "Which employee record would you like to update?",
+        choices: eArr
+    },
+    {
+        type: "list",
+        name: "newManager",
+        message: "Under which manager does this employee work?",
+        choices: mArr
+    }
+]
+
+const delDept = [
+    {
+        type: "list",
+        name: "department",
+        message: "Delete which department?",
+        choices: dArr,
+        default: "Cancel"
+    }
+]
+
+const delRole = [
+    {
+        type: "list",
+        name: "role",
+        message: "Delete which role?",
+        choices: rArr,
+        default: "Cancel"
+    }
+]
+
+const delEmp = [
+    {
+        type: "list",
+        name: "employee",
+        message: "Delete which employee?",
+        choices: eArr,
+        default: "Cancel"
+    }
+]
+
+const deptBudget = [
+    {
+        type: "list",
+        name: "department",
+        message: "View utilized budget for which department?",
+        choices: dArr
     }
 ]
 
 async function updateDepts() {
+    dArr.length = 0;
     await getDepts()
     .then(res => {
         res.map(item => {
-            departments.push(new Option(item.name, item.id));
+            dArr.push(new Option(item.name, item.id));
         });
     });
 }
 
 async function updateRoles() {
+    rArr.length = 0;
     await getRoles()
     .then(res => {
         res.map(item => {
-            roles.push(new Option(item.job_title, item.id));
+            rArr.push(new Option(item.job_title, item.id));
         });
     });
 }
 
 async function updateManagers() {
+    mArr.length = 0;
     await getManagers()
     .then(res => {
         res.map(item => {
-            managers.push(new Option(item.employee_name, item.id));
+            mArr.push(new Option(item.employee_name, item.id));
         });
     });
 }
 
 async function updateEmployees() {
+    eArr.length = 0;
     await getEmployees()
     .then(res => {
         res.map(item => {
-            employees.push(new Option(item.employee_name, item.id));
+            eArr.push(new Option(item.employee_name, item.id));
         });
     });
 }
@@ -171,8 +247,24 @@ async function start() {
                     console.table(employees);
                     start();
                     break;
-                /*case "View employees by manager":
-                case "View employees by department":*/ 
+                case "View employees by manager":
+                    inquirer.prompt(byMan)
+                    .then(async res => {
+                        let byManager = await getByManager(res.manager);
+                        console.log("\n");
+                        console.table(byManager);
+                        start();
+                    });
+                    break;
+                case "View employees by department": 
+                    inquirer.prompt(byDept)
+                    .then(async res => {
+                        let byDept = await getByDept(res.department);
+                        console.log("\n");
+                        console.table(byDept);
+                        start();
+                    });
+                    break;
                 case "Add department":
                     inquirer.prompt(deptDet)
                     .then(async res => {
@@ -205,11 +297,56 @@ async function start() {
                         start();
                     })
                     break;
-                /*case "Update employee manager":
+                case "Update employee manager":
+                    inquirer.prompt(updMan)
+                    .then(async res => {
+                        await updateManager(res.newManager, res.employee);
+                        start();
+                    })
+                    break;
                 case "Delete department":
+                    dArr.push(new Option("Cancel", -1));
+                    if (res.department !== -1) {
+                        inquirer.prompt(delDept)
+                        .then(async res => {
+                            await deleteDept(res.department);
+                            updateDepts();
+                            start();
+                        })
+                    }
+                    break;
                 case "Delete role":
+                    rArr.push(new Option("Cancel", -1));
+                    if (res.department !== -1) {
+                        inquirer.prompt(delRole)
+                        .then(async res => {
+                            await deleteRole(res.role);
+                            updateRoles();
+                            start();
+                        })
+                    }
+                    break;
                 case "Delete employee":
-                case "View utilized budget by department":*/
+                    eArr.push(new Option("Cancel", -1));
+                    if (res.department !== -1) {
+                        inquirer.prompt(delEmp)
+                        .then(async res => {
+                            await deleteEmployee(res.employee);
+                            updateEmployees();
+                            updateManagers();
+                            start();
+                        })
+                    }
+                    break;
+                case "View utilized budget by department":
+                    inquirer.prompt(deptBudget)
+                    .then(async res => {
+                        let budget = await viewBudget(res.department);
+                        console.log("\n");
+                        console.table(budget);
+                        start();
+                    });
+                    break;
                 case "Quit":
                     process.exit();
             }
@@ -226,7 +363,6 @@ async function load() {
 
 load();
 
-// update employee role: get employees, get roles, put employee
 // fix console.log(results) for add entry
 // validations (don't forget to add error handling for database) and .catch
 // deparments should be unique?

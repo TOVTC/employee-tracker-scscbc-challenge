@@ -12,8 +12,8 @@ CREATE TABLE roles (
     job_title VARCHAR(30) NOT NULL,
     salary DECIMAL NOT NULL,
     dept_id INT,
-    is_management BOOLEAN DEFAULT FALSE NOT NULL,
-    CONSTRAINT fk_dept FOREIGN KEY (dept_id) REFERENCES departments(id) ON DELETE SET NULL
+    is_management BOOLEAN DEFAULT FALSE,
+    CONSTRAINT fk_dept FOREIGN KEY (dept_id) REFERENCES departments(id) ON DELETE CASCADE
 );
 
 CREATE TABLE employees (

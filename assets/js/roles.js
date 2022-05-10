@@ -21,7 +21,15 @@ async function addRole(title, salary, deptID) {
     });
 }
 
+async function deleteRole(role) {
+    const sql = `DELETE FROM roles WHERE id = ?`
+    await db.promise().query(sql, [role], (err, result) => {
+        console.log(result);
+    });
+}
+
 module.exports = {
     getRoles,
-    addRole
+    addRole,
+    deleteRole
 }

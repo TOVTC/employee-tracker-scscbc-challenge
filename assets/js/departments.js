@@ -11,6 +11,21 @@ async function getDepts() {
     return dept;
 }
 
+async function viewBudget(department) {
+    const sql = `SELECT
+                    departments.name AS department,
+                    SUM(roles.salary) AS budget_used
+                FROM employees
+                LEFT JOIN roles ON employees.role_id=roles.id
+                LEFT JOIN departments ON roles.dept_id=departments.id
+                WHERE departments.id = ?;`;
+    let budget = await db.promise().query(sql, [department], (err, res) => {
+        console.log(res);
+    })
+    return budget[0];
+}
+
+
 async function addDept(name) {
     const sql = `INSERT INTO departments (name)
                 VALUES(?)`;
@@ -19,7 +34,16 @@ async function addDept(name) {
     });
 }
 
+async function deleteDept(dept) {
+    const sql = `DELETE FROM departments WHERE id = ?`
+    await db.promise().query(sql, [dept], (err, result) => {
+        console.log(result);
+    });
+}
+
 module.exports = {
     getDepts,
-    addDept
+    viewBudget,
+    addDept,
+    deleteDept
 }
