@@ -1,7 +1,7 @@
 const db = require("../../db/connection");
 require("console.table");
 
-function getEmployees() {
+async function getEmployees() {
     const sql = `SELECT
                     employees.id,
                     concat(employees.last_name, ", ", employees.first_name) AS employee_name,
@@ -12,10 +12,13 @@ function getEmployees() {
                 FROM employees
                 LEFT JOIN roles ON employees.role_id=roles.id
                 LEFT JOIN departments ON roles.dept_id=departments.id
-                LEFT JOIN employees managers ON employees.manager_id=managers.id;`;
-    db.query(sql, (err, rows) => {
-        console.table(rows);
+                LEFT JOIN employees managers ON employees.manager_id=managers.id
+                ORDER BY employee_name ASC;`;
+    let employee = await db.promise().query(sql)
+    .then(res => {
+        return res[0];
     });
+    return employee;
 }
 
 // edit variables!

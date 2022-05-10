@@ -1,16 +1,12 @@
 const inquirer = require("inquirer");
 const db = require("./db/connection");
-const {getDepts} = require("./assets/js/departments");
+const {getDepts, addDept} = require("./assets/js/departments");
 const {getRoles, addRole} = require("./assets/js/roles");
 const {getEmployees, addEmployee, updateRole} = require("./assets/js/employees");
 
-// db.connect(err => {
-//     if (err) throw err;
-//     console.log("Database Connected");
-//     start();
-// });
-
-let testArray = ["option 1", "option 2", "option 3"]
+const departments = [];
+const roles = [];
+const employees =[];
 
 const mainMenu = [
     {
@@ -42,33 +38,99 @@ const mainMenu = [
     // }
 ]
 
-start();
+class Option {
+    constructor(name, value) {
+        this.name = name;
+        this.value = value;
+    }
+}
 
-function start() {
+async function updateDepartments() {
+    await getDepts()
+    .then(res => {
+        res.map(item => {
+            departments.push(new Option(item.name, item.id));
+        });
+        console.log(departments);
+    });
+}
+
+async function updateRoles() {
+    await getRoles()
+    .then(res => {
+        res.map(item => {
+            roles.push(new Option(item.job_title, item.id));
+        });
+        console.log(roles);
+    });
+}
+
+async function updateEmployees() {
+    await getEmployees()
+    .then(res => {
+        res.map(item => {
+            employees.push(new Option(item.employee_name, item.id));
+        });
+        console.log(employees);
+    });
+}
+
+async function deptDet() {
+    inquirer.prompt([{
+        type: "input",
+        name: "name",
+        message: "Please enter the name of this department.",
+    }])
+    .then(async res => {
+        await addDept(res.name);
+    });
+}
+
+async function start() {
+    await updateDepartments();
+    await updateRoles();
+    await updateEmployees();
     inquirer.prompt(mainMenu)
-        .then(async (res) => {
+        .then(async res => {
             switch(res.menu) {
                 case "View all departments":
-                    const sql = `SELECT * FROM departments`;
-                    await db.promise().query(sql)
-                    .then(([rows, fields]) => {
-                        console.log("\n");
-                        console.table(rows);
-                        start();
-                    })
+                    let depts = await getDepts();
+                    console.log("\n");
+                    console.table(depts);
+                    start();
                     break;
                 case "View all roles":
-                    getRoles();
+                    let roles = await getRoles();
+                    console.log("\n");
+                    console.table(roles);
                     start();
                     break;
                 case "View all employees":
-                    getEmployees();
+                    let employees = await getEmployees();
+                    console.log(employees);
+                    console.log("\n");
+                    console.table(employees);
                     start();
                     break;
                 /*case "View employees by manager":
                 case "View employees by department":*/ 
                 case "Add department":
+                    await deptDet()
+                    start();
+                    break;
                 case "Add role":
+                    inquirer.prompt([
+                        {
+                            type: "list",
+                            name: "dept",
+                            message: "Please select a department.",
+                            choices: departments
+                        }
+                    ])
+                    .then(res => {
+                        console.log(res);
+                    })
+                    break;
                 case "Add employee":
                 case "Update employee role":
                 /*case "Update employee manager":
@@ -82,15 +144,11 @@ function start() {
         })
 }
 
+start();
+
 // INQUIRER
 // stringify returned promises vs constructor classes
 // each type of command triggers a different instance of inquirer?
-// object.data[...] - so for each item in the returned data array, join the values needed and push to inquirer options?
-// maybe use constructor functions to create specific objects out of inquirer responses?
-
-// view all depts: get depts
-// view all roles: get roles
-// view all employees: get employees
 
 // add a dept: post dept -> what is the dept's name?
 // add a role: post role, get depts -> what is the title of this position? What is the salary for this position? What department does this role belong to (dropdown)?
@@ -98,8 +156,5 @@ function start() {
 
 // update employee role: get employees, get roles, put employee
 
-// validations and bonuses, change to asynchronous calls
-// MySQL2 exposes a .promise() function on Connections to upgrade an existing non-Promise connection to use Promises
-// post/push using constructor functions
-// if you're just getting data, you can use the console.table package to render rows using the data.array
-// do you push properties of returned data objects into an array and use inquirer.prompt? - the answer is yes, also choices can be OBJECTS with name and value properties
+// validations (don't forget to add error handling for database) and .catch
+// deparments should be unique?

@@ -1,22 +1,24 @@
 const db = require("../../db/connection");
 require("console.table");
 
-function getRoles() {
-    const sql = `SELECT roles.id, roles.job_title, roles.salary, departments.name
+async function getRoles() {
+    const sql = `SELECT roles.id, roles.job_title, roles.salary, departments.name AS department
                 FROM roles
-                LEFT JOIN departments ON roles.dept=departments.id;`;
-    db.query(sql, (err, rows) => {
-        console.table(rows);
+                LEFT JOIN departments ON roles.dept_id=departments.id
+                ORDER BY job_title ASC;`;
+    let role = await db.promise().query(sql)
+    .then(res => {
+        return res[0]
     });
+    return role;
 }
 
 // edit variables!
-function addRole() {
+async function addRole(title, salary, deptID) {
     // add validation here
     const sql = `INSERT INTO roles (job_title, salary, dept_id)
                 VALUES(?,?,?)`;
-    const params = [body.job_title, body.salary, body.dept_id];//edit this
-    db.query(sql, params, (err, result) => {
+    await db.promise().query(sql, [title, salary, deptID], (err, result) => {
         console.log(result);
     });
 }
