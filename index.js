@@ -1,5 +1,8 @@
 const inquirer = require("inquirer");
 const {viewAllDept} = require("./assets/js/departments");
+const cTable = require("console.table");
+const router = require("./routes/apiRoutes/index");
+const db = require("./db/connection");
 
 let testArray = ["option 1", "option 2", "option 3"]
 
@@ -37,9 +40,10 @@ const mainMenu = [
 function start() {
     inquirer.prompt(mainMenu)
         .then(res => {
-            viewAllDept(res); //or something like that
-            console.log("done!")
-            // implies start and stop server all the time?
+            const sql = `SELECT * FROM departments`;
+            db.query(sql, (err, rows) => {
+                console.log(rows)
+            });
         })
 }
 
