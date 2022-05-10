@@ -9,23 +9,23 @@ VALUES
     ('Human_Resources'),
     ('Public_Relations');
 
-INSERT INTO roles (job_title, salary, dept_id)
+INSERT INTO roles (job_title, salary, dept_id, is_management)
 VALUES
-    ('President', 70000, 1),
-    ('Vice_President', 60000, 1),
-    ('Marketing_Manager', 50000, 2),
-    ('IT_Manager', 55000, 3),
-    ('Finance_Manager', 50000, 4),
-    ('Operations_Manager', 50000, 5),
-    ('Admin_Assistant', 35000, 6),
-    ('HR_Rep', 35000, 7),
-    ('PR_Rep', 35000, 8),
-    ('Marketing_Rep', 35000, 2),
-    ('Developer', 40000, 3),
-    ('Accountant', 35000, 4),
-    ('Data_Clerk', 31000, 5),
-    ('Customer_Service', 31000, 5),
-    ('Operations_Attendant', 31000, 5);
+    ('President', 70000, 1, true),
+    ('Vice_President', 60000, 1, true),
+    ('Marketing_Manager', 50000, 2, true),
+    ('IT_Manager', 55000, 3, true),
+    ('Finance_Manager', 50000, 4, true),
+    ('Operations_Manager', 50000, 5, true),
+    ('Admin_Assistant', 35000, 6, false),
+    ('HR_Rep', 35000, 7, false),
+    ('PR_Rep', 35000, 8, false),
+    ('Marketing_Rep', 35000, 2, false),
+    ('Developer', 40000, 3, false),
+    ('Accountant', 35000, 4, false),
+    ('Data_Clerk', 31000, 5, false),
+    ('Customer_Service', 31000, 5, false),
+    ('Operations_Attendant', 31000, 5, false);
 
 INSERT INTO employees (first_name, last_name, role_id, manager_id)
 VALUES

@@ -2,7 +2,8 @@ const db = require("../../db/connection");
 require("console.table");
 
 async function getDepts() {
-    const sql = `SELECT * FROM departments`;
+    const sql = `SELECT * FROM departments
+                ORDER BY name ASC`;
     let dept = await db.promise().query(sql)
         .then(res => {
             return res[0];
@@ -11,10 +12,8 @@ async function getDepts() {
 }
 
 async function addDept(name) {
-    // add validation here
     const sql = `INSERT INTO departments (name)
-                VALUES(?)
-                ORDER BY name ASC`;
+                VALUES(?)`;
     await db.promise().query(sql, [name], (err, result) => {
         console.log(result);
     });

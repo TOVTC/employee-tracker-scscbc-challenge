@@ -13,9 +13,7 @@ async function getRoles() {
     return role;
 }
 
-// edit variables!
 async function addRole(title, salary, deptID) {
-    // add validation here
     const sql = `INSERT INTO roles (job_title, salary, dept_id)
                 VALUES(?,?,?)`;
     await db.promise().query(sql, [title, salary, deptID], (err, result) => {
