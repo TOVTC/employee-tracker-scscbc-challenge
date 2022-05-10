@@ -1,8 +1,14 @@
 const inquirer = require("inquirer");
-const {viewAllDept} = require("./assets/js/departments");
-const cTable = require("console.table");
-const router = require("./routes/apiRoutes/index");
 const db = require("./db/connection");
+const {getDepts} = require("./assets/js/departments");
+const {getRoles, addRole} = require("./assets/js/roles");
+const {getEmployees, addEmployee, updateRole} = require("./assets/js/employees");
+
+db.connect(err => {
+    if (err) throw err;
+    console.log("Database Connected");
+    start();
+});
 
 let testArray = ["option 1", "option 2", "option 3"]
 
@@ -11,7 +17,7 @@ const mainMenu = [
         type: "list",
         name: "menu",
         message: "What would you like to do?",
-        choices: ["View all deparments",
+        choices: ["View all departments",
                     "View all roles", 
                     "View all employees",
                     /*, "View employees by manager",
@@ -40,14 +46,9 @@ const mainMenu = [
 function start() {
     inquirer.prompt(mainMenu)
         .then(res => {
-            const sql = `SELECT * FROM departments`;
-            db.query(sql, (err, rows) => {
-                console.log(rows)
-            });
+            getDepts();
         })
 }
-
-module.exports = {start};
 
 // RESPONSE HANDLING
 // one file for dept, role, emp of functions that make the actual API call to return data

@@ -1,21 +1,26 @@
-const path = require("path");
-const fetch = require("node-fetch");
+const db = require("../../db/connection");
+require("console.table");
 
-// still to edit - also I know this is for Web APIs, but node-fetch is not the way to gooo
+function getDepts() {
+    const sql = `SELECT * FROM departments`;
+    db.query(sql, (err, rows) => {
+        console.table(rows);
+    });
+    process.exit();
+}
 
-const viewAllDept = () => {
-    fetch("/departments"), {
-        method: "GET",
-        headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json"
-        }
-    }
-    .then(res => {
-        console.log(res);
-    })
+//still to confirm
+function addDept(name) {
+    // add validation here
+    const sql = `INSERT INTO departments (name)
+                VALUES(?)`;
+    db.query(sql, [name], (err, result) => {
+        console.log(result);
+    });
+    process.exit();
 }
 
 module.exports = {
-    viewAllDept
+    getDepts,
+    addDept
 }
