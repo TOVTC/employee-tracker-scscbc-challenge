@@ -2,30 +2,30 @@ INSERT INTO departments (department_name)
 VALUES
     ('Executive'),
     ('Marketing'),
-    ('Info_Tech'),
+    ('Info Tech'),
     ('Finance'),
     ('Operations'),
     ('Administration'),
-    ('Human_Resources'),
-    ('Public_Relations');
+    ('Human Resources'),
+    ('Public Relations');
 
 INSERT INTO roles (job_title, salary, dept_id, is_management)
 VALUES
     ('President', 70000, 1, true),
-    ('Vice_President', 60000, 1, true),
-    ('Marketing_Manager', 50000, 2, true),
-    ('IT_Manager', 55000, 3, true),
-    ('Finance_Manager', 50000, 4, true),
-    ('Operations_Manager', 50000, 5, true),
-    ('Admin_Assistant', 35000, 6, false),
-    ('HR_Rep', 35000, 7, false),
-    ('PR_Rep', 35000, 8, false),
-    ('Marketing_Rep', 35000, 2, false),
+    ('Vice President', 60000, 1, true),
+    ('Marketing Manager', 50000, 2, true),
+    ('IT Manager', 55000, 3, true),
+    ('Finance Manager', 50000, 4, true),
+    ('Operations Manager', 50000, 5, true),
+    ('Admin Assistant', 35000, 6, false),
+    ('HR Rep', 35000, 7, false),
+    ('PR Rep', 35000, 8, false),
+    ('Marketing Rep', 35000, 2, false),
     ('Developer', 40000, 3, false),
     ('Accountant', 35000, 4, false),
-    ('Data_Clerk', 31000, 5, false),
-    ('Customer_Service', 31000, 5, false),
-    ('Operations_Attendant', 31000, 5, false);
+    ('Data Clerk', 31000, 5, false),
+    ('Customer Service', 31000, 5, false),
+    ('Operations Attendant', 31000, 5, false);
 
 INSERT INTO employees (first_name, last_name, role_id, manager_id)
 VALUES
