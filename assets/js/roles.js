@@ -8,7 +8,16 @@ async function getRoles() {
                 ORDER BY job_title ASC;`;
     let role = await db.promise().query(sql)
     .then(res => {
-        return res[0]
+        if (!res) {
+            return [{message: "An error occurred."}];
+        }
+        if (res[0].length === 0) {
+            return [{message: "No entries to display."}];
+        }
+        return res[0];
+    })
+    .catch(err => {
+        console.log(err);
     });
     return role;
 }
@@ -17,14 +26,42 @@ async function addRole(title, salary, deptID) {
     const sql = `INSERT INTO roles (job_title, salary, dept_id)
                 VALUES(?,?,?)`;
     await db.promise().query(sql, [title, salary, deptID], (err, result) => {
-        console.log(result);
+        if (err) {
+            return;
+        }
+        return result;
+    })
+    .then(res => {
+        if (res[0].warningStatus !== 0 || res[0].affectedRows !== 1) {
+            console.log("An error occurred.");
+            return;
+        }
+        console.log(`\nSuccessfully added entry - role id: ${res[0].insertId}.\nAdded ${res[0].affectedRows} row.\n`);
+        return;
+    })
+    .catch(err => {
+        console.log(err);
     });
 }
 
 async function deleteRole(role) {
     const sql = `DELETE FROM roles WHERE id = ?`
     await db.promise().query(sql, [role], (err, result) => {
-        console.log(result);
+        if (err) {
+            return false;
+        }
+        return result;
+    })
+    .then(res => {
+        if (res[0].warningStatus !== 0 || res[0].affectedRows !== 1) {
+            console.log("An error occurred.");
+            return;
+        }
+        console.log(`\nSuccessfully deleted ${res[0].affectedRows} entry.\n`);
+        return;
+    })
+    .catch(err => {
+        console.log(err);
     });
 }
 

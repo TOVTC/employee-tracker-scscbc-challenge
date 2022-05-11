@@ -4,7 +4,8 @@ DROP TABLE IF EXISTS departments;
 
 CREATE TABLE departments (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(30) NOT NULL
+    department_name VARCHAR(30) NOT NULL,
+    CONSTRAINT uc_dept UNIQUE(name)
 );
 
 CREATE TABLE roles (
@@ -13,7 +14,7 @@ CREATE TABLE roles (
     salary DECIMAL NOT NULL,
     dept_id INT,
     is_management BOOLEAN DEFAULT FALSE,
-    CONSTRAINT fk_dept FOREIGN KEY (dept_id) REFERENCES departments(id) ON DELETE CASCADE
+    CONSTRAINT fk_dept FOREIGN KEY (dept_id) REFERENCES departments(id) ON DELETE SET NULL
 );
 
 CREATE TABLE employees (

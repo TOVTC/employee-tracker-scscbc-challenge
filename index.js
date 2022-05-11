@@ -1,5 +1,4 @@
 const inquirer = require("inquirer");
-const db = require("./db/connection");
 const {getDepts, viewBudget, addDept, deleteDept} = require("./assets/js/departments");
 const {getRoles, addRole, deleteRole} = require("./assets/js/roles");
 const {getEmployees, getManagers, getByManager, getByDept, addEmployee, updateRole, updateManager, deleteEmployee} = require("./assets/js/employees");
@@ -21,20 +20,20 @@ const mainMenu = [
         type: "list",
         name: "menu",
         message: "What would you like to do?",
-        choices: ["View all departments",
-                    "View all roles", 
-                    "View all employees",
-                    "View employees by manager",
-                    "View employees by department",
-                    "Add department", 
-                    "Add role", 
-                    "Add employee", 
-                    "Update employee role", 
-                    "Update employee manager", 
+        choices: ["View all departments",//
+                    "View all roles",//
+                    "View all employees",//
+                    "View employees by manager",//
+                    "View employees by department",//
+                    "Add department",//
+                    "Add role",//
+                    "Add employee",// 
+                    "Update employee role",//
+                    "Update employee manager",//
                     "Delete department",
                     "Delete role",
                     "Delete employee",
-                    "View utilized budget by department",
+                    "View utilized budget by department",//
                     "Quit"],
         default: "Quit"
     }
@@ -225,6 +224,16 @@ async function updateEmployees() {
     });
 }
 
+function titleCase(str) {
+    let strArr = str.split(" ");
+    let newArr = strArr.map(word => {
+        var capt = word.substring(1, 0).toUpperCase();
+        var string = word.substring(1).toLowerCase();
+        return capt += string;
+    });
+    return newArr.join(" ");
+};
+
 async function start() {
     inquirer.prompt(mainMenu)
         .then(async res => {
@@ -268,7 +277,8 @@ async function start() {
                 case "Add department":
                     inquirer.prompt(deptDet)
                     .then(async res => {
-                        await addDept(res.name);
+                        let name = titleCase(res.name);
+                        await addDept(name);
                         await updateDepts();
                         start();
                     });
@@ -276,7 +286,8 @@ async function start() {
                 case "Add role":
                     inquirer.prompt(roleDet)
                     .then(async res => {
-                        await addRole(res.title, res.salary, res.dept, res.management);
+                        let name = titleCase(res.title);
+                        await addRole(name, res.salary, res.dept, res.management);
                         await updateRoles();
                         start();
                     });
@@ -284,7 +295,9 @@ async function start() {
                 case "Add employee":
                     inquirer.prompt(employeeDet)
                     .then(async res => {
-                        await addEmployee(res.firstName, res.lastName, res.role, res.manager);
+                        let firstName = titleCase(res.firstName);
+                        let lastName = titleCase(res.lastName);
+                        await addEmployee(firstName, lastName, res.role, res.manager);
                         await updateEmployees();
                         await updateManagers();
                         start();
@@ -305,7 +318,7 @@ async function start() {
                     })
                     break;
                 case "Delete department":
-                    dArr.push(new Option("Cancel", -1));
+                    dArr.unshift(new Option("Cancel", -1));
                     if (res.department !== -1) {
                         inquirer.prompt(delDept)
                         .then(async res => {
@@ -316,7 +329,7 @@ async function start() {
                     }
                     break;
                 case "Delete role":
-                    rArr.push(new Option("Cancel", -1));
+                    rArr.unshift(new Option("Cancel", -1));
                     if (res.department !== -1) {
                         inquirer.prompt(delRole)
                         .then(async res => {
@@ -327,7 +340,7 @@ async function start() {
                     }
                     break;
                 case "Delete employee":
-                    eArr.push(new Option("Cancel", -1));
+                    eArr.unshift(new Option("Cancel", -1));
                     if (res.department !== -1) {
                         inquirer.prompt(delEmp)
                         .then(async res => {
@@ -363,6 +376,4 @@ async function load() {
 
 load();
 
-// fix console.log(results) for add entry
-// validations (don't forget to add error handling for database) and .catch
-// deparments should be unique?
+// validations
