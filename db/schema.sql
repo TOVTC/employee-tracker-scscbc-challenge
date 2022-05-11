@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS departments;
 CREATE TABLE departments (
     id INT AUTO_INCREMENT PRIMARY KEY,
     department_name VARCHAR(30) NOT NULL,
-    CONSTRAINT uc_dept UNIQUE(name)
+    CONSTRAINT uc_dept UNIQUE(department_name)
 );
 
 CREATE TABLE roles (

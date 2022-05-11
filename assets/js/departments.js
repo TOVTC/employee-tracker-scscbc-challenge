@@ -1,9 +1,10 @@
 const db = require("../../db/connection");
 require("console.table");
 
+// view all departments
 async function getDepts() {
     const sql = `SELECT * FROM departments
-                ORDER BY name ASC`;
+                ORDER BY department_name ASC`;
     let dept = await db.promise().query(sql)
     .then(res => {
         if (!res) {
@@ -20,34 +21,9 @@ async function getDepts() {
     return dept;
 }
 
-async function viewBudget(department) {
-    const sql = `SELECT
-                    departments.name AS department,
-                    SUM(roles.salary) AS budget_used
-                FROM employees
-                LEFT JOIN roles ON employees.role_id=roles.id
-                LEFT JOIN departments ON roles.dept_id=departments.id
-                WHERE departments.id = ?;`;
-    let budget = await db.promise().query(sql, [department], (err, result) => {
-        if (err) {
-            return [{message: "An error occurred."}];
-        }
-        return result;
-    })
-    .then(res => {
-        if (res[0].length === 0) {
-            return [{message: "No entries to display."}];
-        }
-        return res[0];
-    })
-    .catch(err => {
-        console.log(err);
-    });
-    return budget
-}
-
+// add a department
 async function addDept(name) {
-    const sql = `INSERT INTO departments (name)
+    const sql = `INSERT INTO departments (department_name)
                 VALUES(?)`;
     await db.promise().query(sql, [name], (err, result) => {
         if (err) {
@@ -68,6 +44,7 @@ async function addDept(name) {
     });
 }
 
+// delete a department
 async function deleteDept(dept) {
     const sql = `DELETE FROM departments WHERE id = ?`
     await db.promise().query(sql, [dept], (err, result) => {
@@ -89,9 +66,36 @@ async function deleteDept(dept) {
     });
 }
 
+// view budget by department
+async function viewBudget(department) {
+    const sql = `SELECT
+                    departments.department_name,
+                    SUM(roles.salary) AS budget_used
+                FROM employees
+                LEFT JOIN roles ON employees.role_id=roles.id
+                LEFT JOIN departments ON roles.dept_id=departments.id
+                WHERE departments.id = ?;`;
+    let budget = await db.promise().query(sql, [department], (err, result) => {
+        if (err) {
+            return [{message: "An error occurred."}];
+        }
+        return result;
+    })
+    .then(res => {
+        if (res[0][0].department_name === null) {
+            return [{message: "No entries to display."}];
+        }
+        return res[0];
+    })
+    .catch(err => {
+        console.log(err);
+    });
+    return budget
+}
+
 module.exports = {
     getDepts,
-    viewBudget,
     addDept,
-    deleteDept
+    deleteDept,
+    viewBudget
 }

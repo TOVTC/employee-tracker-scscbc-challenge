@@ -1,13 +1,14 @@
 const db = require("../../db/connection");
 require("console.table");
 
+// view all employees
 async function getEmployees() {
     const sql = `SELECT
                     employees.id,
                     concat(employees.last_name, ", ", employees.first_name) AS employee_name,
                     roles.job_title,
                     roles.salary,
-                    departments.name AS department,
+                    departments.department_name AS department,
                     concat(managers.last_name, ", ", managers.first_name) AS manager_name
                 FROM employees
                 LEFT JOIN roles ON employees.role_id=roles.id
@@ -30,6 +31,7 @@ async function getEmployees() {
     return employee;
 }
 
+// load managers only
 async function getManagers() {
     const sql = `SELECT
                     employees.id,
@@ -55,13 +57,14 @@ async function getManagers() {
     return manager;
 }
 
+// view employees by manager
 async function getByManager(manager) {
     const sql = `SELECT
                     employees.id,
                     concat(employees.last_name, ", ", employees.first_name) AS employee_name,
                     roles.job_title,
                     roles.salary,
-                    departments.name AS department,
+                    departments.department_name AS department,
                     concat(managers.last_name, ", ", managers.first_name) AS manager_name
                 FROM employees
                 LEFT JOIN roles ON employees.role_id=roles.id
@@ -87,13 +90,14 @@ async function getByManager(manager) {
     return employee;
 }
 
+// view employees by department
 async function getByDept(department) {
     const sql = `SELECT
                     employees.id,
                     concat(employees.last_name, ", ", employees.first_name) AS employee_name,
                     roles.job_title,
                     roles.salary,
-                    departments.name AS department,
+                    departments.department_name AS department,
                     concat(managers.last_name, ", ", managers.first_name) AS manager_name
                 FROM employees
                 LEFT JOIN roles ON employees.role_id=roles.id
@@ -119,6 +123,7 @@ async function getByDept(department) {
     return employee;
 }
 
+// add an employee
 async function addEmployee(firstName, lastName, role, manager) {
     const sql = `INSERT INTO employees (first_name, last_name, role_id, manager_id)
                 VALUES(?,?,?,?)`;
@@ -141,6 +146,7 @@ async function addEmployee(firstName, lastName, role, manager) {
     });
 }
 
+// update employee role
 async function updateRole(newRole, employee) {
     const sql = `UPDATE employees SET role_id = ?
                 WHERE id = ?`
@@ -163,6 +169,7 @@ async function updateRole(newRole, employee) {
     });
 }
 
+// update employee manager
 async function updateManager(newManager, employee) {
     const sql = `UPDATE employees SET manager_id = ?
                 WHERE id = ?`
@@ -185,6 +192,7 @@ async function updateManager(newManager, employee) {
     });
 }
 
+// delete an employee
 async function deleteEmployee(employee) {
     const sql = `DELETE FROM employees WHERE id = ?`
     await db.promise().query(sql, [employee], (err, result) => {

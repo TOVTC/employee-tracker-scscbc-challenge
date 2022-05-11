@@ -1,8 +1,9 @@
 const db = require("../../db/connection");
 require("console.table");
 
+// view all roles
 async function getRoles() {
-    const sql = `SELECT roles.id, roles.job_title, roles.salary, departments.name AS department
+    const sql = `SELECT roles.id, roles.job_title, roles.salary, departments.department_name AS department
                 FROM roles
                 LEFT JOIN departments ON roles.dept_id=departments.id
                 ORDER BY job_title ASC;`;
@@ -22,6 +23,7 @@ async function getRoles() {
     return role;
 }
 
+// add a role
 async function addRole(title, salary, deptID) {
     const sql = `INSERT INTO roles (job_title, salary, dept_id)
                 VALUES(?,?,?)`;
@@ -44,6 +46,7 @@ async function addRole(title, salary, deptID) {
     });
 }
 
+// delete a role
 async function deleteRole(role) {
     const sql = `DELETE FROM roles WHERE id = ?`
     await db.promise().query(sql, [role], (err, result) => {
