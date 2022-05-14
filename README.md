@@ -1,6 +1,6 @@
 
-  # Employee Tracker (Database)
-  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)</br></br>
+  # Employee Tracker (SQL Database)
+  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)</br>
     
   This application uses MySQL, Node.js, and others to host and maintain a database of company employees. Users are able to interact with the database using the terminal to view, update, add, and delete department, role, and employee information.
   
@@ -37,9 +37,11 @@
   
   ## Authors & Acknowledgements<a name="credits"></a>
   The following resources were particularly helpful in the construction of this application:</br>These articles [here](https://www.sqlshack.com/learn-sql-join-multiple-tables/) and [here](https://learnsql.com/blog/what-is-self-join-sql/) on SQL table joins and [this](https://www.w3schools.com/sql/func_sqlserver_concat.asp) article on concatenating column headings in SQL.</br></br>
-  Special thanks to Kevin336's csv file [here](https://gist.github.com/kevin336/acbb2271e66c10a5b73aacf82ca82784) which I edited to make the example seeds for this database.
+  Special thanks to Kevin336's csv file [here](https://gist.github.com/kevin336/acbb2271e66c10a5b73aacf82ca82784) which I edited to make the example seeds for this database.</br></br>
+  And [Erik](https://github.com/CodingErik) for his always helpful office hours about .then() vs async/await and try/catch.
   
-  Made by [TOVTC](https://github.com/TOVTC).
+  Made by [TOVTC](https://github.com/TOVTC).</br>
+  Originally submitted 2022May11.
   
   ## License<a name="license"></a>
   This application uses the MIT License. For more information regarding usage, please visit [this link](https://opensource.org/licenses/MIT).

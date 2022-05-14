@@ -20,41 +20,33 @@ class Option {
 // dynamically update inquirer array options
 async function updateDepts() {
     dArr.length = 0;
-    await getDepts()
-    .then(res => {
-        res.map(item => {
+    let d = await getDepts();
+    d.map(item => {
             dArr.push(new Option(item.department_name, item.id));
         });
-    });
 }
 
 async function updateRoles() {
     rArr.length = 0;
-    await getRoles()
-    .then(res => {
-        res.map(item => {
-            rArr.push(new Option(item.job_title, item.id));
-        });
+    let r = await getRoles();
+    r.map(item => {
+        rArr.push(new Option(item.job_title, item.id));
     });
 }
 
 async function updateManagers() {
     mArr.length = 0;
-    await getManagers()
-    .then(res => {
-        res.map(item => {
-            mArr.push(new Option(item.employee_name, item.id));
-        });
+    let m = await getManagers();
+    m.map(item => {
+        mArr.push(new Option(item.employee_name, item.id));
     });
 }
 
 async function updateEmployees() {
     eArr.length = 0;
-    await getEmployees()
-    .then(res => {
-        res.map(item => {
-            eArr.push(new Option(item.employee_name, item.id));
-        });
+    let e = await getEmployees();
+    e.map(item => {
+        eArr.push(new Option(item.employee_name, item.id));
     });
 }
 
@@ -193,109 +185,110 @@ const employeeDet = [
 
 // loop and handle options
 async function start() {
-    inquirer.prompt(mainMenu)
-        .then(async res => {
-            switch(res.menu) {
-            // View
-                case "View all departments":
-                    let depts = await getDepts();
-                    console.log("\n");
-                    console.table(depts);
-                    start();
-                    break;
-                case "View all roles":
-                    let roles = await getRoles();
-                    console.log("\n");
-                    console.table(roles);
-                    start();
-                    break;
-                case "View all employees":
-                    let employees = await getEmployees();
-                    console.log("\n");
-                    console.table(employees);
-                    start();
-                    break;
-            // View by
-                case "View employees by manager":
-                    inquirer.prompt([
+    try {
+        let res = await inquirer.prompt(mainMenu);
+        switch(res.menu) {
+        // View
+            case "View all departments":
+                let depts = await getDepts();
+                console.log("\n");
+                console.table(depts);
+                start();
+                break;
+            case "View all roles":
+                let roles = await getRoles();
+                console.log("\n");
+                console.table(roles);
+                start();
+                break;
+            case "View all employees":
+                let employees = await getEmployees();
+                console.log("\n");
+                console.table(employees);
+                start();
+                break;
+        // View by
+            case "View employees by manager":
+                try {
+                    let vbm = await inquirer.prompt([
                         {
                             type: "list",
                             name: "manager",
                             message: "Filter by which manager?",
                             choices: mArr
                         }
-                    ])
-                    .then(async res => {
-                        let byManager = await getByManager(res.manager);
-                        console.log("\n");
-                        console.table(byManager);
-                        start();
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
+                    ]);
+                    let byManager = await getByManager(vbm.manager);
+                    console.log("\n");
+                    console.table(byManager);
+                    start();
                     break;
-                case "View employees by department": 
-                    inquirer.prompt([
+                }
+                catch (err) {
+                    console.log(err);
+                }
+            case "View employees by department": 
+                try {
+                    let vbd = await inquirer.prompt([
                         {
                             type: "list",
                             name: "department",
                             message: "Filter by which department?",
                             choices: dArr
                         }
-                    ])
-                    .then(async res => {
-                        let byDept = await getByDept(res.department);
-                        console.log("\n");
-                        console.table(byDept);
-                        start();
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
+                    ]);
+                    let byDept = await getByDept(vbd.department);
+                    console.log("\n");
+                    console.table(byDept);
+                    start();
                     break;
-            // Add
-                case "Add department":
-                    inquirer.prompt(deptDet)
-                    .then(async res => {
-                        let name = titleCase(res.name);
-                        await addDept(name);
-                        await updateDepts();
-                        start();
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
+                }
+                catch (err) {
+                    console.log(err);
+                }
+        // Add
+            case "Add department":
+                try {
+                    let ad = await inquirer.prompt(deptDet);
+                    let dName = titleCase(ad.name);
+                    await addDept(dName);
+                    await updateDepts();
+                    start();
                     break;
-                case "Add role":
-                    inquirer.prompt(roleDet)
-                    .then(async res => {
-                        let name = titleCase(res.title);
-                        await addRole(name, res.salary, res.dept, res.management);
-                        await updateRoles();
-                        start();
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
+                }
+                catch (err) {
+                    console.log(err);
+                }
+            case "Add role":
+                try {
+                    let ar = await inquirer.prompt(roleDet);
+                    let rName = titleCase(ar.title);
+                    await addRole(rName, ar.salary, ar.dept, ar.management);
+                    await updateRoles();
+                    start();
                     break;
-                case "Add employee":
-                    inquirer.prompt(employeeDet)
-                    .then(async res => {
-                        let firstName = titleCase(res.firstName);
-                        let lastName = titleCase(res.lastName);
-                        await addEmployee(firstName, lastName, res.role, res.manager);
-                        await updateEmployees();
-                        await updateManagers();
-                        start();
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
+                }
+                catch (err) {
+                    console.log(err);
+                }
+            case "Add employee":
+                try {
+                    let ae = await inquirer.prompt(employeeDet);
+                    let firstName = titleCase(ae.firstName);
+                    let lastName = titleCase(ae.lastName);
+                    await addEmployee(firstName, lastName, ae.role, ae.manager);
+                    await updateEmployees();
+                    await updateManagers();
+                    start();
                     break;
-            // Update
-                case "Update employee role":
-                    inquirer.prompt([
+                }
+                catch (err) {
+                    console.log(err);
+                }
+        // Update
+            case "Update employee role":
+                try {
+                    let uer = await inquirer.prompt([
                         {
                             type: "list",
                             name: "employee",
@@ -308,17 +301,17 @@ async function start() {
                             message: "What position does this employee hold?",
                             choices: rArr
                         }
-                    ])
-                    .then(async res => {
-                        await updateRole(res.newRole, res.employee);
-                        start();
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
+                    ]);
+                    await updateRole(uer.newRole, uer.employee);
+                    start();
                     break;
-                case "Update employee manager":
-                    inquirer.prompt([
+                }
+                catch (err) {
+                    console.log(err);
+                }
+            case "Update employee manager":
+                try {
+                    let uem = await inquirer.prompt([
                         {
                             type: "list",
                             name: "employee",
@@ -331,111 +324,110 @@ async function start() {
                             message: "Under which manager does this employee work?",
                             choices: mArr
                         }
-                    ])
-                    .then(async res => {
-                        await updateManager(res.newManager, res.employee);
-                        start();
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
+                    ]);
+                    await updateManager(uem.newManager, uem.employee);
+                    start();
                     break;
-            // Delete - adds the option to cancel the delete action
-                case "Delete department":
+                }
+                catch (err) {
+                    console.log(err);
+                }
+        // Delete - adds the option to cancel the delete action
+            case "Delete department":
+                try {
                     dArr.unshift(new Option("Cancel", -1));
-                        inquirer.prompt([
-                            {
-                                type: "list",
-                                name: "department",
-                                message: "Delete which department?",
-                                choices: dArr,
-                                default: "Cancel"
-                            }
-                        ])
-                        .then(async res => {
-                            if (res.department !== -1) {
-                                await deleteDept(res.department);
-                            }
-                            updateDepts();
-                            start();
-                        })
-                        .catch(err => {
-                            console.log(err);
-                        });
+                    let dd = await inquirer.prompt([
+                        {
+                            type: "list",
+                            name: "department",
+                            message: "Delete which department?",
+                            choices: dArr,
+                            default: "Cancel"
+                        }
+                    ]);
+                    if (dd.department !== -1) {
+                        await deleteDept(dd.department);
+                    }
+                    updateDepts();
+                    start();
                     break;
-                case "Delete role":
+                }
+                catch (err) {
+                    console.log(err);
+                }
+            case "Delete role":
+                try {
                     rArr.unshift(new Option("Cancel", -1));
-                        inquirer.prompt([
-                            {
-                                type: "list",
-                                name: "role",
-                                message: "Delete which role?",
-                                choices: rArr,
-                                default: "Cancel"
-                            }
-                        ])
-                        .then(async res => {
-                            if (res.role !== -1) {
-                                await deleteRole(res.role);
-                            }
-                            updateRoles();
-                            start();
-                        })
-                        .catch(err => {
-                            console.log(err);
-                        });
+                    let dr = await inquirer.prompt([
+                        {
+                            type: "list",
+                            name: "role",
+                            message: "Delete which role?",
+                            choices: rArr,
+                            default: "Cancel"
+                        }
+                    ]);
+                    if (dr.role !== -1) {
+                        await deleteRole(dr.role);
+                    }
+                    updateRoles();
+                    start();
                     break;
-                case "Delete employee":
+                }
+                catch (err) {
+                    console.log(err);
+                }
+            case "Delete employee":
+                try {
                     eArr.unshift(new Option("Cancel", -1));
-                        inquirer.prompt([
-                            {
-                                type: "list",
-                                name: "employee",
-                                message: "Delete which employee?",
-                                choices: eArr,
-                                default: "Cancel"
-                            }
-                        ])
-                        .then(async res => {
-                            if (res.employee !== -1) {
-                                await deleteEmployee(res.employee);
-                            }
-                            updateEmployees();
-                            updateManagers();
-                            start();
-                        })
-                        .catch(err => {
-                            console.log(err);
-                        });
+                    let de = await inquirer.prompt([
+                        {
+                            type: "list",
+                            name: "employee",
+                            message: "Delete which employee?",
+                            choices: eArr,
+                            default: "Cancel"
+                        }
+                    ]);
+                    if (de.employee !== -1) {
+                        await deleteEmployee(de.employee);
+                    }
+                    updateEmployees();
+                    updateManagers();
+                    start();
                     break;
-            // Budget
-                case "View utilized budget by department":
-                    inquirer.prompt([
+                }
+                catch (err) {
+                    console.log(err);
+                }
+        // Budget
+            case "View utilized budget by department":
+                try {
+                    let vbbd = await inquirer.prompt([
                         {
                             type: "list",
                             name: "department",
                             message: "View utilized budget for which department?",
                             choices: dArr
                         }
-                    ])
-                    .then(async res => {
-                        let budget = await viewBudget(res.department);
-                        console.log("\n");
-                        console.table(budget);
-                        start();
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
+                    ]);
+                    let budget = await viewBudget(vbbd.department);
+                    console.log("\n");
+                    console.table(budget);
+                    start();
                     break;
-            // Quit
-                case "Quit":
-                    process.exit();
-            }
-        })
-        .catch(err => {
-            console.log(err);
-        });
+                }
+                catch (err) {
+                    console.log(err);
+                }
+        // Quit
+            case "Quit":
+                process.exit();
+        }
+    }
+    catch (err) {
+        console.log(err);
+    }
 }
 
 async function load() {
