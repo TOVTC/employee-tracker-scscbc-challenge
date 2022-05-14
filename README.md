@@ -37,7 +37,8 @@
   
   ## Authors & Acknowledgements<a name="credits"></a>
   The following resources were particularly helpful in the construction of this application:</br>These articles [here](https://www.sqlshack.com/learn-sql-join-multiple-tables/) and [here](https://learnsql.com/blog/what-is-self-join-sql/) on SQL table joins and [this](https://www.w3schools.com/sql/func_sqlserver_concat.asp) article on concatenating column headings in SQL.</br></br>
-  Special thanks to Kevin336's csv file [here](https://gist.github.com/kevin336/acbb2271e66c10a5b73aacf82ca82784) which I edited to make the example seeds for this database.
+  Special thanks to Kevin336's csv file [here](https://gist.github.com/kevin336/acbb2271e66c10a5b73aacf82ca82784) which I edited to make the example seeds for this database.</br></br>
+  And [Erik](https://github.com/CodingErik) for his always helpful office hours about .then() vs async/await and try/catch.
   
   Made by [TOVTC](https://github.com/TOVTC).</br>
   Originally submitted 2022May11.
